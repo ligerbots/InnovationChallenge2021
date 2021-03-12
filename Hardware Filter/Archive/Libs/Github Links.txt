@@ -1,0 +1,3 @@
+Mirf = https://github.com/aaronds/arduino-nrf24l01
+Spi85 = https://github.com/stanleyseow/attiny-nRF24L01/tree/master/libraries/mirf85
+mirf85 = https://github.com/stanleyseow/attiny-nRF24L01/tree/master/libraries/mirf85
