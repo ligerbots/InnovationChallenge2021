@@ -1,9 +1,3 @@
-
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <math.h>
-
 #define SAMPLE_RATE 16000
 #define BASE_FREQ 50 //must be factor of sample rate
 #define NUM_SAMPLES 512
