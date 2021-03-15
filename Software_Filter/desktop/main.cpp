@@ -32,7 +32,7 @@ double real_buf[num_samples];
 double imag_buf[num_samples];
 
 
-arduinoFFT FFT = arduinoFFT();
+arduinoFFT FFT = arduinoFFT(real_buf, imag_buf, num_samples, sampling_frequency);
 
 unsigned long start;
 
@@ -49,14 +49,15 @@ void process_sample(int16_t sample){
     if(sample_index >= num_samples){
         sample_index=0;
 
-        //FFT.Windowing(FFT_WIN_TYP_HAMMING, FFT_FORWARD);
-        FFT.Compute(real_buf, imag_buf, num_samples, FFT.Exponent(num_samples), FFT_FORWARD);
-        FFT.ComplexToMagnitude(real_buf, imag_buf, num_samples);
+        FFT.Windowing(FFT_WIN_TYP_HAMMING, FFT_FORWARD);
+        FFT.Compute(FFT_FORWARD);
+        FFT.ComplexToMagnitude();
+
         for(int i=0;i<num_samples;i++){
             imag_buf[i]=0;
         }
+        
         process_fft();
-
     }
 }
 
