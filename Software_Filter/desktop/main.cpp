@@ -41,7 +41,13 @@ void process_fft(){
     for(int i=0; i<num_samples/2; i++){
         outfile << real_buf[i] << " ";
     }
-    outfile<<"\n";
+    if(real_buf[95]>1000){
+        outfile << "y";
+    }else{
+        outfile << "n";
+    }
+
+    outfile <<"\n";
 }
 
 void process_sample(int16_t sample){
@@ -56,7 +62,7 @@ void process_sample(int16_t sample){
         for(int i=0;i<num_samples;i++){
             imag_buf[i]=0;
         }
-        
+
         process_fft();
     }
 }
