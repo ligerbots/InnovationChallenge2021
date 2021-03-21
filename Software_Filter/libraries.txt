@@ -1,0 +1,3 @@
+arduinoFFT: https://github.com/kosme/arduinoFFT
+elapsedMillis: https://github.com/pfeerick/elapsedMillis
+SavLayFilter: https://github.com/jmderomedi/SavitzkyGolayFilter
