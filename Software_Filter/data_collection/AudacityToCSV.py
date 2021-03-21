@@ -12,7 +12,7 @@ def convert(filepath):
     filename = filename[0]
 
     # Write outputfile
-    with open("data\\" + filename + ".csv", mode='w') as output_file: 
+    with open("Software_Filter\\data_collection\\data\\" + filename + ".csv", mode='w', newline='') as output_file: 
         output_writer = csv.writer(output_file, delimiter=",")
 
         for line in Lines:
@@ -24,7 +24,7 @@ def convert(filepath):
     f.close()
 
 # Driver Code:
-# convert("Software_Filter\data_collection\data\standard_whistle.txt")
+convert("Software_Filter\data_collection\data\standard_whistle.txt")
 
-# Call this from CMD:
+# Call this from CMD (change open path "Software_Filter\\data_collection\\data\\" into "data\\")
 # python -c 'import AudacityToCSV; AudacityToCSV.convert("data\\standard_whistle.txt")'
