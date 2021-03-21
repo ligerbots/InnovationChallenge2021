@@ -32,15 +32,18 @@ void setup() {
 //==================================================================================================
 void loop() {
   float noise = analogRead(analog_input);                             //Creates random noise from a floating pin
-  outputValue = (sin(phase) * 1000.0 + 2000.0) + noise;     //Creates sin wave pattern with A = 1000 and shifted up by 2000
+  float artifical_noise = random(300);
+  outputValue = (sin(phase) * 1000.0 + 2000.0) + artifical_noise;     //Creates sin wave pattern with A = 1000 and shifted up by 2000
   phase = phase + 0.02;                                     //Shifts the sin wave
   if (phase >= twopi) phase = 0;                            //Resets the phase
   while (usec < 30000) ;                                    //Wait to make printing easier to read
   usec = usec - 30000;                                      //Keeps timer from overflowing
 
+//  Serial.print(noise);
+//  Serial.print(",");
   Serial.print(outputValue);                                //Raw Value [Blue line]
   Serial.print(",");
-  Serial.print(smallFilter.Compute());                      //Smoothed value of smaller window [Orange line]
-  Serial.print(",");
-  Serial.println(largeFilter.Compute());                    //Smoothed value of smaller window [Red line]
+  Serial.println(smallFilter.Compute());                      //Smoothed value of smaller window [Orange line]
+//  Serial.print(",");
+//  Serial.println(largeFilter.Compute());                    //Smoothed value of smaller window [Red line]
 }//END LOOP
