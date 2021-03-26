@@ -32,7 +32,7 @@ sample_rate = args.sample_rate // 2  # for some reason it needs to be halved
 if(args.noise > 0):
     db_diff = math.log(args.noise)
     noise_path = Path(args.noise_file)
-    noise = AudioSegment.from_file(noise_path)
+    noise = AudioSegment.from_file(noise_path) + db_diff
 else:
     noise_path = None
     noise = None
