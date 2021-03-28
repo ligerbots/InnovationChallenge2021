@@ -1,7 +1,6 @@
 namespace process{
     const int sampling_frequency = 16000;
     const int num_samples = 512;
-    const int iters = 100;
 
     const float freq_cutoff_low = 2000;
     const float freq_cutoff_high = 8000;
@@ -10,7 +9,7 @@ namespace process{
     const int high_index = freq_cutoff_high * num_samples / sampling_frequency;
 
     const float min_height = 7e2f;
-    const float min_height_to_mean_ratio = 3;
+    const float min_height_to_mean_ratio = 4;
     const float max_margin = .3f;
 
     const int num_trackers = 5;
@@ -33,7 +32,7 @@ namespace process{
 
     unsigned long start;
 
-    float rollingMean = 1;
+    float rollingMean = 0;
 
     void process_fft(){
         // sampling_frequency/num_samples*i = freq
