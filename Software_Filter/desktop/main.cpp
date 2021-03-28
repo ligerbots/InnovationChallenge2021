@@ -1,11 +1,12 @@
 // python generate_data.py -n 1 -l 20 -os "sound.wav" data/A1*
 // g++ main.cpp arduinoFFT/arduinoFFT.cpp -o main -Wno-#warnings && ./main && python display_spectrogram.py
 
-#import "arduinoFFT/arduinoFFT.h"
 #include <iostream>
 #include <fstream>
 #include <vector>
 #include <math.h>
+#include <cstdint>
+#include "arduinoFFT/arduinoFFT.h"
 
 std::ofstream outfile;
 
