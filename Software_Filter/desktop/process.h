@@ -9,7 +9,8 @@ namespace process{
     const int low_index = freq_cutoff_low * num_samples / sampling_frequency;
     const int high_index = freq_cutoff_high * num_samples / sampling_frequency;
 
-    const float min_height = 8e3f;
+    const float min_height = 7e2f;
+    const float min_height_to_mean_ratio = 3;
     const float max_margin = .3f;
 
     const int num_trackers = 5;
@@ -32,6 +33,7 @@ namespace process{
 
     unsigned long start;
 
+    float rollingMean = 1;
 
     void process_fft(){
         // sampling_frequency/num_samples*i = freq
@@ -44,6 +46,12 @@ namespace process{
         for(int i=0;i<num_samples;i++){
             imag_buf[i] = 0;
         }
+        float mean = 0;
+        for(int i=0;i<num_samples/2;i++){
+            mean += real_buf[i];
+        }
+        mean /= num_samples/2;
+        rollingMean = mean; //rollingMean*.7 + mean*.3;
 
         bool isAscending = true;
         float localMinimum = 0;
@@ -79,7 +87,7 @@ namespace process{
                     for(int j=0;j<num_peaks;j++){
                         if(peakHeights[j]<peakHeights[minIndex]) minIndex = j;
                     }
-                    if(height > peakHeights[minIndex] && height> min_height){
+                    if(height > peakHeights[minIndex] && height> min_height && height > rollingMean * min_height_to_mean_ratio){
                         peakHeights[minIndex] = height;
                         peakIndexes[minIndex] = localMaximumIndex;
                     }
@@ -183,10 +191,11 @@ namespace process{
             }
 
             outfile <<"\n";
+            std::cout<<rollingMean<<"\n";
         #endif
 
         #ifdef __ESP32__
-        /*
+            /*
             for(int i=0;i<num_trackers;i++){
                 if(tracker_count[i]>=1){
                     Serial.print("L curr ");

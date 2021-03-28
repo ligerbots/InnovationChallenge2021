@@ -58,7 +58,7 @@ if(error_reading):
 
 colormap = plt.cm.bwr
 normalize = matplotlib.colors.Normalize()
-#axarr[0].scatter(pt_xs, pt_ys, c=pt_cs, s=10, cmap=colormap, norm=normalize, marker='x', linewidth=1)
+axarr[0].scatter(pt_xs, pt_ys, c=pt_cs, s=10, cmap=colormap, norm=normalize, marker='x', linewidth=1)
 
 arr_np=np.array(arr)
 colors_np=np.array(colors)
