@@ -1,3 +1,5 @@
+#include <vector>
+
 namespace process{
     const int sampling_frequency = 16000;
     const int num_samples = 512;
@@ -9,8 +11,8 @@ namespace process{
     const int low_index = freq_cutoff_low * num_samples / sampling_frequency;
     const int high_index = freq_cutoff_high * num_samples / sampling_frequency;
 
-    int inflections[num_peaks];
-    float inflection_heights[num_peaks];
+    std::vector<int> inflection_points;
+    std::vector<float> inflection_heights;
 
     double real_buf[num_samples];
     double imag_buf[num_samples];
@@ -34,23 +36,17 @@ namespace process{
         bool isAscending = true;
         float lowestFreq = real_buf[low_index]; 
 
-        for(int i=0;i<num_peaks;i++){ // What does this do? Is this to set the vals all to -1 (for starting off?)
-            inflections[i] = -1;
-            inflection_heights[i] = -1.f;
-        }
+        for(int i=low_index+1; i<=high_index; i++){    // Loop through range of interest
+            new_point = real_buf[i];
+            prev_point = real_buf[i-1];
 
-        for(int i=low_index; i<=high_index; i++){
-            if(isAscending){
-                if(real_buf[i] * (1.f + max_margin) < localMaximum){
-                    isAscending = false;
-                    localMinimum = real_buf[i];
-                    localMinimumIndex = i;
-                }else{
-                    if(real_buf[i] > localMaximum){
-                        localMaximum = real_buf[i];
-                        localMaximumIndex = i;
-                    }
-                }
+            if(isAscending && new_point - prev_point < 0 ){
+                isAscending = false;
+                inflection_points.push_back(i);         // Store point when derivative changes
+                inflection_heights.push_back(new_point);
+
+            }
+            
             }else{
                 if(real_buf[i] * (1.f - max_margin) > localMinimum){
                     isAscending = true;
