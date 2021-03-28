@@ -5,7 +5,7 @@ namespace process{
     const float freq_cutoff_low = 2000;
     const float freq_cutoff_high = 8000;
 
-    const int low_index = freq_cutoff_low * num_samples / sampling_frequency;
+    const int low_index = freq_cutoff_low * num_samples / sampling_frequency;   // Get bin corresponding to lowest freq.
     const int high_index = freq_cutoff_high * num_samples / sampling_frequency;
 
     const float min_height = 7e2f;
@@ -24,8 +24,8 @@ namespace process{
     int peakIndexes[num_peaks];
     float peakHeights[num_peaks];
 
-    double real_buf[num_samples];
-    double imag_buf[num_samples];
+    double real_buf[num_samples];                                                   // FFT real vals stored here
+    double imag_buf[num_samples];                                                   // FFT imag. vals stored here
 
 
     arduinoFFT FFT = arduinoFFT(real_buf, imag_buf, num_samples, sampling_frequency);
@@ -42,7 +42,7 @@ namespace process{
         FFT.Compute(FFT_FORWARD);
         FFT.ComplexToMagnitude();
 
-        for(int i=0;i<num_samples;i++){
+        for(int i=0;i<num_samples;i++){                                            // Get rid of imag vals (set to 0)
             imag_buf[i] = 0;
         }
         float mean = 0;
@@ -58,21 +58,22 @@ namespace process{
         float localMaximum = 0;
         int localMaximumIndex = 0;
 
-        float previousLocalMinimum = real_buf[low_index];
+        float previousLocalMinimum = real_buf[low_index];                         // Starting prev. min is lowest bin
 
-        for(int i=0;i<num_peaks;i++){
+        for(int i=0;i<num_peaks;i++){                                             // Init vals
             peakIndexes[i] = -1;
             peakHeights[i] = -1.f;
         }
 
+        // Comparing current val against last peak - Is this true?
         for(int i=low_index; i<=high_index; i++){
             if(isAscending){
-                if(real_buf[i] * (1.f + max_margin) < localMaximum){
+                if(real_buf[i] * (1.f + max_margin) < localMaximum){              // Signal is decreasing
                     isAscending = false;
                     localMinimum = real_buf[i];
                     localMinimumIndex = i;
                 }else{
-                    if(real_buf[i] > localMaximum){
+                    if(real_buf[i] > localMaximum){                               // Signal is increasing
                         localMaximum = real_buf[i];
                         localMaximumIndex = i;
                     }
