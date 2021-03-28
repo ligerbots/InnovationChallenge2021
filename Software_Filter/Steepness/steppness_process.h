@@ -9,22 +9,15 @@ namespace process{
     const int low_index = freq_cutoff_low * num_samples / sampling_frequency;
     const int high_index = freq_cutoff_high * num_samples / sampling_frequency;
 
-    const int max_peak_distance = 2;
-    const int max_tracker_count = 5;
-    const int tracker_cutoff = 3;
-    const int num_peaks = 5;
-
-    int peakIndexes[num_peaks];
-    float peakHeights[num_peaks];
+    int inflections[num_peaks];
+    float inflection_heights[num_peaks];
 
     double real_buf[num_samples];
     double imag_buf[num_samples];
 
-
     arduinoFFT FFT = arduinoFFT(real_buf, imag_buf, num_samples, sampling_frequency);
 
     unsigned long start;
-
 
     void process_fft(){
         // sampling_frequency/num_samples*i = freq
@@ -34,21 +27,16 @@ namespace process{
         FFT.Compute(FFT_FORWARD);
         FFT.ComplexToMagnitude();
 
-        for(int i=0;i<num_samples;i++){
+        for(int i=0;i<num_samples;i++){ // What does this do? Is this to remove all imaginaries?
             imag_buf[i] = 0;
         }
 
         bool isAscending = true;
-        float localMinimum = 0;
-        int localMinimumIndex = 0;
-        float localMaximum = 0;
-        int localMaximumIndex = 0;
+        float lowestFreq = real_buf[low_index]; 
 
-        float previousLocalMinimum = real_buf[low_index];
-
-        for(int i=0;i<num_peaks;i++){
-            peakIndexes[i] = -1;
-            peakHeights[i] = -1.f;
+        for(int i=0;i<num_peaks;i++){ // What does this do? Is this to set the vals all to -1 (for starting off?)
+            inflections[i] = -1;
+            inflection_heights[i] = -1.f;
         }
 
         for(int i=low_index; i<=high_index; i++){
