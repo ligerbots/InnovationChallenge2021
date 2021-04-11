@@ -1,3 +1,7 @@
+#ifdef __ESP32__
+#include "arduinoFFT.h"
+#endif
+
 namespace process{
     const int sampling_frequency = 16000;
     const int num_samples = 512;
@@ -8,18 +12,18 @@ namespace process{
     const int low_index = freq_cutoff_low * num_samples / sampling_frequency;   // Get bin corresponding to lowest freq.
     const int high_index = freq_cutoff_high * num_samples / sampling_frequency;
 
-    const float min_height = 7e2f;
-    const float min_height_to_mean_ratio = 4;
-    const float max_margin = .3f;
+    const float min_height = 1e3f;
+    const float min_height_to_mean_ratio = 2.5;
+    const float max_margin = .2f;
 
     const int num_trackers = 5;
 
     int tracker_index[num_trackers];
     int tracker_count[num_trackers];
-    const int max_peak_distance = 2;
+    const int max_peak_distance = 3;
     const int max_tracker_count = 5;
     const int tracker_cutoff = 3;
-    const int num_peaks = 5;
+    const int num_peaks = 10;
 
     int peakIndexes[num_peaks];
     float peakHeights[num_peaks];
@@ -81,8 +85,8 @@ namespace process{
             }else{
                 if(real_buf[i] * (1.f - max_margin) > localMinimum){
                     isAscending = true;
-                    float height = localMaximum - (previousLocalMinimum + localMinimum)/2;
-
+                    //float height = localMaximum - (previousLocalMinimum + localMinimum)/2;
+                    float height = localMaximum;
                     int minIndex = 0;
                     for(int j=0;j<num_peaks;j++){
                         if(peakHeights[j]<peakHeights[minIndex]) minIndex = j;
@@ -109,6 +113,14 @@ namespace process{
                 outfile << "L curr "<<peakIndexes[i] << " " << peakHeights[i] << "\n";
             }
         }*/
+        
+        for(int i=0;i<num_peaks;i++){
+          Serial.print(peakIndexes[i]);
+          Serial.print(": ");
+          Serial.print(peakHeights[i]);
+          Serial.print("   ");
+        }
+        Serial.println();
 
         for(int i=0;i<num_trackers;i++){
             if(tracker_count[i]>0){
@@ -144,6 +156,16 @@ namespace process{
             std::cout<<tracker_index[i]<<":"<<tracker_count[i]<<" ";
         }
         std::cout<<"\n";
+        */
+
+        /*
+        for(int i=0;i<num_trackers;i++){
+          Serial.print(tracker_index[i]);
+          Serial.print(": ");
+          Serial.print(tracker_count[i]);
+          Serial.print(" ");
+        }
+        Serial.println();
         */
         for(int i=0;i<num_trackers;i++){
             if(tracker_count[i]<=0){
@@ -223,6 +245,8 @@ namespace process{
 
         #ifdef __ESP32__
             digitalWrite(LED_BUILTIN, anyWhistle);
+            setActivationStatus(anyWhistle);
+
         #endif
 
 
@@ -230,10 +254,10 @@ namespace process{
 
     void init(){
         #ifdef __DESKTOP__
-            std::cout<<"low "<<low_index<<" high "<<high_index<<"\n";
+          std::cout<<"low "<<low_index<<" high "<<high_index<<"\n";
         #endif
         #ifdef __ESP32__
-            pinMode(LED_BUILTIN, OUTPUT);
+          pinMode(LED_BUILTIN, OUTPUT);
         #endif
 
     }

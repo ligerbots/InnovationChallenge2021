@@ -35,8 +35,7 @@ void loop(){
             long expectedtime = start + 1000 * buff_index / sampling_frequency;
             long currenttime = millis();
             if(expectedtime>currenttime){
-                delay(expectedtime-currenttime);
-
+              delayMicroseconds((expectedtime - currenttime)*1000);
             }
         }else{
             digitalWrite(LED_BUILTIN, false);
