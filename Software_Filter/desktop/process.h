@@ -12,7 +12,7 @@ namespace process{
     const int low_index = freq_cutoff_low * num_samples / sampling_frequency;   // Get bin corresponding to lowest freq.
     const int high_index = freq_cutoff_high * num_samples / sampling_frequency;
 
-    const float min_height = 1e3f;
+    const float min_height = 3e3f;
     const float min_height_to_mean_ratio = 2.5;
     const float max_margin = .2f;
 
@@ -20,9 +20,9 @@ namespace process{
 
     int tracker_index[num_trackers];
     int tracker_count[num_trackers];
-    const int max_peak_distance = 3;
-    const int max_tracker_count = 5;
-    const int tracker_cutoff = 3;
+    const int max_peak_distance = 2;
+    const int max_tracker_count = 8;
+    const int tracker_cutoff = 4;
     const int num_peaks = 10;
 
     int peakIndexes[num_peaks];
@@ -85,8 +85,8 @@ namespace process{
             }else{
                 if(real_buf[i] * (1.f - max_margin) > localMinimum){
                     isAscending = true;
-                    //float height = localMaximum - (previousLocalMinimum + localMinimum)/2;
-                    float height = localMaximum;
+                    float height = localMaximum - (previousLocalMinimum + localMinimum)/2;
+                    //float height = localMaximum;
                     int minIndex = 0;
                     for(int j=0;j<num_peaks;j++){
                         if(peakHeights[j]<peakHeights[minIndex]) minIndex = j;
@@ -113,6 +113,7 @@ namespace process{
                 outfile << "L curr "<<peakIndexes[i] << " " << peakHeights[i] << "\n";
             }
         }*/
+        /*
         
         for(int i=0;i<num_peaks;i++){
           Serial.print(peakIndexes[i]);
@@ -121,6 +122,7 @@ namespace process{
           Serial.print("   ");
         }
         Serial.println();
+        */
 
         for(int i=0;i<num_trackers;i++){
             if(tracker_count[i]>0){

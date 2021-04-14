@@ -1,11 +1,15 @@
 #define __ESP32__
 
 //#define DEBUGSAMPLE
-#define DEBUGTIMING
+//#define DEBUGTIMING
 void setActivationStatus(bool isActivated);
 
 #include "process.h"
 #include "esp32-hal-adc.h"
+#ifndef DEBUGSAMPLE
+  #include "esp_bt_main.h"
+  #include "esp_wifi.h"
+#endif
 /*
 WIRING:
 A0/GPIO36 to MIC OUT
@@ -99,7 +103,10 @@ void setup() {
   process::init();
   disableCore0WDT();
   disableCore1WDT();
-  
+  #ifndef DEBUGSAMPLE
+    esp_bluedroid_disable();
+    esp_wifi_stop();
+  #endif    
 }
 #ifdef DEBUGTIMING
   long last_process = millis();
